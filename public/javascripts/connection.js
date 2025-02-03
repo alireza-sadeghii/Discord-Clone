@@ -1,4 +1,5 @@
-
+let isMuted = false;
+let isDeaf = false;
 let localStream = null;
 let peerConnections = {};
 let mediaConstraints = { audio: true, video: false };
@@ -7,14 +8,13 @@ let mediaConstraints = { audio: true, video: false };
 socket.on('made-voice-connection', (data) => {
     getUserMedia().then(() => {
         const { channel, users } = data;
-        if (users.includes(socket.id)) {
-            users.forEach((userId) => {
-                if (userId !== socket.id && !peerConnections[userId]) {
-                    createPeerConnection(userId);
-                    startCall(userId);
-                }
-            });
-        }
+        console.log(peerConnections);
+        users.forEach((userId) => {
+            if (userId !== socket.id) {
+                createPeerConnection(userId);
+                startCall(userId);
+            }
+        });
     }).catch(error => {
         console.error('Error accessing media devices:', error);
         alert('Unable to access microphone.');
@@ -23,7 +23,9 @@ socket.on('made-voice-connection', (data) => {
 
 async function getUserMedia() {
     try {
-        localStream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
+        if (!localStream) {
+            localStream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
+        }
     } catch (error) {
         console.error('Error accessing media devices:', error);
         throw error;
@@ -36,11 +38,13 @@ function createPeerConnection(userId) {
     });
 
     localStream.getTracks().forEach(track => {
+        if (track.kind === 'audio') {
+            track.enabled = !isMuted;
+        }
         peerConnection.addTrack(track, localStream);
     });
 
     peerConnections[userId] = peerConnection;
-    pcon = peerConnection;
 
     peerConnection.onicecandidate = (event) => {
         if (event.candidate) {
@@ -60,6 +64,9 @@ function createPeerConnection(userId) {
             document.body.appendChild(remoteAudio);
         }
         remoteAudio.srcObject = event.streams[0];
+        remoteAudio.muted = isDeaf;
+
+        handleUserStream(event.streams[0]);
     };
 }
 
@@ -120,3 +127,40 @@ function leaveVoiceChannel() {
     }
     localStream = null;
 }
+
+function muteUser() {
+    if (localStream) {
+        localStream.getTracks().forEach(track => {
+            if (track.kind === 'audio') {
+                track.enabled = false; // Mute the audio track
+            }
+        });
+        isMuted = true;
+    }
+}
+
+function unmuteUser() {
+    if (localStream) {
+        localStream.getTracks().forEach(track => {
+            if (track.kind === 'audio') {
+                track.enabled = true;
+            }
+        });
+        isMuted = false;
+    }
+}
+
+function deafUser() {
+    document.querySelectorAll('audio').forEach(audio => {
+        audio.muted = true;
+    });
+    isDeaf = true;
+}
+
+function undeafUser() {
+    document.querySelectorAll('audio').forEach(audio => {
+        audio.muted = false;
+    });
+    isDeaf = false;
+}
+
