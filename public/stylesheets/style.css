@@ -855,6 +855,11 @@ footer a {
   margin-right: 10px;
 }
 
+.voice-coordinator {
+  border: 2px green solid;
+  border-radius: 100%;
+}
+
 .message-content {
   display: flex;
   flex-direction: column;
