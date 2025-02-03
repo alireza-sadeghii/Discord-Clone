@@ -1,3 +1,5 @@
+let name = null;
+
 socket.on('update-member-list', (usernames) => {
     const memberList = document.getElementById('members-list');
     memberList.innerHTML = '';
@@ -11,17 +13,8 @@ socket.on('update-member-list', (usernames) => {
 });
 
 socket.on('username-assigned', (username) => {
-    document.getElementById("user-info").innerText = username;
-});
-
-const muteButton = document.getElementById('mute');
-muteButton.addEventListener('click', () => {
-    muteButton.style.color = muteButton.style.color === 'red' ? 'greenyellow' : 'red';
-});
-
-const deafButton = document.getElementById('deaf');
-deafButton.addEventListener('click', () => {
-    deafButton.style.color = deafButton.style.color === 'red' ? 'greenyellow' : 'red';
+    name = username;
+    document.getElementById("user-info").innerText = name;
 });
 
 const all = document.querySelectorAll('.channel-name');
@@ -31,7 +24,6 @@ channels.forEach(channel => {
         all.forEach(ch => ch.classList.remove('selected'));
         channel.classList.add('selected');
         document.getElementById('selected-channel-name').innerText = channel.innerHTML;
-
         await updateChatChannels();
     });
 });
@@ -61,6 +53,7 @@ voices.forEach(voice => {
         document.getElementById('selected-channel-name').innerText = voice.id;
 
         const channelName = voice.id;
+        leaveVoiceChannel();
         socket.emit('join-voice-channel', { channel: channelName });
     });
 });
@@ -101,6 +94,8 @@ function updateVoice(channel, users) {
 
             const userProfile = document.createElement('img');
             userProfile.setAttribute('src', '../images/profile.png');
+            userProfile.id = user;
+
             userElement.appendChild(userProfile);
             userElement.appendChild(memberName);
 
@@ -109,12 +104,73 @@ function updateVoice(channel, users) {
     }
 }
 
+function detectTalking(stream) {
+    const audioContext = new AudioContext();
+    const source = audioContext.createMediaStreamSource(stream);
+    const analyser = audioContext.createAnalyser();
+    source.connect(analyser);
+
+    analyser.fftSize = 512;
+    const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+    const userProfile = document.getElementById(name);
+
+    function updateTalkingIndicator() {
+        analyser.getByteFrequencyData(dataArray);
+        const volume = dataArray.reduce((a, b) => a + b) / dataArray.length;
+
+        if (volume > 15) {
+            userProfile.classList.add('voice-coordinator');
+        } else {
+            userProfile.classList.remove('voice-coordinator');
+        }
+
+        requestAnimationFrame(updateTalkingIndicator);
+    }
+
+    updateTalkingIndicator();
+}
+
+
+function handleUserStream(stream) {
+    detectTalking(stream);
+}
+
+
+const muteButton = document.getElementById('mute');
+muteButton.addEventListener('click', () => {
+    muteCheck();
+});
+
+function muteCheck() {
+    if (muteButton.style.color === 'greenyellow') {
+        muteButton.style.color = 'red';
+        muteUser();
+    }
+    else {
+        muteButton.style.color = 'greenyellow';
+        unmuteUser();
+    }
+}
+
+const deafButton = document.getElementById('deaf');
+deafButton.addEventListener('click', () => {
+    deafCheck();
+});
+
+function deafCheck() {
+    if (deafButton.style.color === 'greenyellow') {
+        deafButton.style.color = 'red';
+        deafUser();
+    }
+    else {
+        deafButton.style.color = 'greenyellow';
+        undeafUser();
+    }
+}
 
 const disconnectButton = document.getElementById('disconnect');
 disconnectButton.addEventListener('click', () => {
     socket.emit("disconnect-from-voice-channel");
     leaveVoiceChannel();
 });
-
-
-//TODO: add btns action deaf amd mute and user connect to voice channel
