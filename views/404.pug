@@ -1,0 +1,18 @@
+extends layout
+
+block title
+    title Page Not Found !
+
+block content
+    .noise
+    .overlay
+    div#error-container
+        div.error-content
+            h1 OMG! You got
+                span.error-code  #r00t!
+            p.cmd-detail No i'm just kidding :)
+            p.output The page you are looking for might have been removed, had its name changed or is temporarily unavailable.
+            p.output Please try to
+                |  go back or
+                a(href='/') return to the homepage.
+            p.output Good luck.

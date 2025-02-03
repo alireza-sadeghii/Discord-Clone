@@ -1,0 +1,43 @@
+extends layout
+
+block title
+    title Discord | About Us
+
+block content
+    .main-page#about-us
+        #landing-background
+            img(src="/images/landing.jpg")
+        header
+            ol#header-menu
+                li
+                    a(href="/" id='home-link') Home
+                li
+                    a(href="/about" id='about-link') About Us
+                li
+                    a(href="/faq" id='faq-link') FAQ
+        section.data-container
+            div.data-block
+                h3 About Us
+                p Welcome to the Discord Voice Channels project! This platform allows users to join voice channels and communicate with others in real-time through audio. The project was developed as part of the Internet Engineering course at K.N.Toosi University and serves as our final project. Our goal was to create a functional voice communication platform that allows users to interact seamlessly with minimal setup or login requirements.
+            div.data-block
+            div.data-block
+                h4 Technologies We Used
+                p In this project, we utilized several modern technologies to implement the server-side and client-side logic, as well as real-time voice communication. Here's an overview of what we used:
+                h5 Back-End
+                p
+                    | Node.js (with Express.js for routing): Server-side JavaScript runtime for handling API requests and communication.
+                    | WebSocket: Enables real-time communication between the server and clients for live voice chat.
+                    | MongoDB Atlas: A cloud-based NoSQL database for storing user data and chat history.
+                    | Postman: For API testing and ensuring our endpoints are functioning correctly.
+                    | Docker: Used for containerization to ensure the app runs consistently across all environments.
+                h5 Front-End
+                    p HTML, Pug, CSS, and JavaScript: These were used for building the user interface and client-side logic.
+                h5 Voice Communication
+                    p WebRTC: Used for real-time audio streaming between users, enabling clear voice communication with low latency.
+                h5 Extras
+                    p Ensure the project README includes the GitHub repository link, setup instructions, and screenshots showcasing the implemented features.
+                    p Focused on voice communication only—no video streaming features were included.
+            div.data-block
+            div.data-block
+                h4 Project Goals
+                p The main goal of this project is to provide a simple, real-time voice chat platform where users can join channels, communicate without the need for logging in, and have a seamless audio experience with low latency. By utilizing WebRTC, WebSocket, and MongoDB, we were able to create a scalable, functional communication system. The project also helped us gain hands-on experience with essential technologies like real-time data handling, voice streaming, and modern back-end frameworks.

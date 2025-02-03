@@ -1,0 +1,60 @@
+extends layout
+
+block title
+    title Omegle | FAQ
+//TODO: should change this file
+block content
+    .main-page#faq
+        #landing-background
+            img(src="/images/landing.jpg")
+        header
+            ol#header-menu
+                li
+                    a(href="/" id='home-link') Home
+                li
+                    a(href="/about" id='about-link') About Us
+                li
+                    a(href="/faq" id='faq-link') FAQ
+        section#faq-section
+            div.faq-card
+                h3 What is the Omegle project?
+                div.answer
+                    p This project is a communication platform
+                        |  that allows users to randomly connect with others for voice,
+                        |  video, and text chat. The main goal of this project is to learn
+                        |  about WebRTC and WebSocket technologies and how to establish real-time
+                        |  communication between users.
+            div.faq-card
+                h3 How does random user connection work?
+                div.answer
+                    p After joining the system, users are connected to a central
+                        |  server that maintains a list of online users.
+                        |  The server randomly selects another user from the list
+                        |  and establishes a connection between the two.
+            div.faq-card
+                h3 Can users disconnect and reconnect?
+                div.answer
+                    p We Yes, each user can disconnect from the session.
+                        |  After disconnection, the system automatically connects
+                        |  the user to the next available person from the list,
+                        |  requiring no manual action from the user.
+            div.faq-card
+                h3 What type of connection is established between users?
+                div.answer
+                    p
+                        |  The connection between users consists of three main features:
+                        br
+                        |  - Audio: Users can make voice calls using WebRTC.
+                        br
+                        |  - Video: Video calls are supported using the device's camera.
+                        br
+                        |  - Text: A text-based chat feature allows users to exchange messages.
+            div.faq-card
+                h3 Is it possible to increase the number of participants?
+                div.answer
+                    p In the basic version, the connection is limited to two users.
+                        |  However, adding support for more participants (group calls) is
+                        |  an optional feature that can be implemented and would add extra
+                        |  value to the project. This can be achieved by creating rooms and
+                        |  managing multiple users in them.
+    script(src="/javascripts/util.js")

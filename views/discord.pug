@@ -1,0 +1,56 @@
+extends layout
+
+block title
+    title Discord | App
+
+block content
+    div#application
+        section#servers-column.column-display
+            div.server-icon
+                img(src="/images/avatar1.jpg")
+            div.server-icon#add-server
+                span.plus-sign
+
+        section#channels-column.column-display
+            div.column-header
+                span Server Name
+            div#channels-list.scroll
+                span.channel-name general
+                span.channel-name music
+                span.channel-name.voice-channel#game-voice game
+                span.channel-name.voice-channel#movie-voice movie
+            div#user-control
+                div#user-image
+                    img(src="/images/profile.png")
+                div#user-card
+                    span#user-info username
+                    div#controls
+                        button#mute
+                            i(class="fas fa-microphone")
+                        button#deaf
+                            i(class="fas fa-deaf")
+                        button#disconnect
+                            i(class="fas fa-phone")
+
+        section#chat-column.column-display
+            div.column-header
+                span#selected-channel-name general
+            div#message-section.scroll
+            div#chat-panel
+                textarea#chat-input
+                button#send-btn
+                    i(class="fas fa-paper-plane")
+                button#emoji-btn
+                    i(class="fas fa-smile")
+            div.emoji-picker#emoji-picker
+
+        section#members-column.column-display
+            div.column-header
+                span Members
+            div#members-list.scroll
+                span.member-name User#1463
+
+    script(src="/javascripts/socket.io.min.js")
+    script(src="/javascripts/chat.js")
+    script(src="/javascripts/update.js")
+    script(src="/javascripts/connection.js")

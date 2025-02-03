@@ -1,0 +1,81 @@
+extends layout
+
+block title
+  title Discord | Home
+
+block content
+  .main-page#landing
+    div#network-canvas
+    div#network-p
+      |  Welcome to the&nbsp;
+      span.highlight.red Discord
+      |  voice channel, where your noob friend ignores everything and still manages to get you&nbsp;
+      span.highlight.yellow killed
+      |  !
+      br
+      |  Get your headphones ready for the rage!
+
+    div.mouse-scroll#mouse-scroller
+      div.mouse
+        div.wheel
+      div.mouse-arrow
+        span
+        p Dive it
+
+  .main-page#homepage
+    #landing-background
+      img(src="/images/landing.jpg")
+    #bubble-container
+      div.bubble(style="left: 31%; top: 32%; transform: scale(.8);")
+        img(src="/images/avatar1.jpg", alt="Avatar 1" style="transform: rotate(-30deg);")
+      div.bubble(style="left: 33.5%; top: 20%; transform: scale(1.2);")
+        img(src="/images/avatar2.jpg", alt="Avatar 2", style="transform: rotate(10deg);")
+      div.bubble(style="left: 52.5%; top: 32%; transform: scale(.9);")
+        img(src="/images/avatar3.jpg", alt="Avatar 3", style="transform: rotate(-15deg);")
+      div.bubble(style="left: 62.5%; top: 17.5%; transform: scale(1);")
+        img(src="/images/avatar4.jpg", alt="Avatar 4", style="transform: rotate(5deg);")
+      div.bubble(style="left: 67%; top: 34%; transform: scale(1.2);")
+        img(src="/images/avatar5.jpg", alt="Avatar 5", style="transform: rotate(-25deg);")
+      div.bubble(style="left: 34%; top: 45%; transform: scale(.7);")
+        img(src="/images/avatar6.jpg", alt="Avatar 6", style="transform: rotate(-15deg);")
+      div.bubble(style="left: 61.5%; top: 45%; transform: scale(.6);")
+        img(src="/images/avatar7.jpg", alt="Avatar 7", style="transform: rotate(30deg);")
+    header
+      ol#header-menu
+        li
+          a(href="/" id='home-link') Home
+        li
+          a(href="/about" id='about-link') About Us
+        li
+          a(href="/faq" id='faq-link') FAQ
+    section#hero-section
+      #hero-title Talk To Your Friends
+      #hero-subtitle
+        | Join Discord voice channels to talk live with others
+        br
+        | online and enjoy it
+      a#hero-btn.button(href="/app") Let's Chat
+      div#hero-cards
+        div.hero-card
+          i.fas.fa-sync-alt
+          | Instant Chaos
+        div.hero-card
+          i.fas.fa-microphone-alt
+          | Rage Ready Mics
+        div.hero-card
+          i.fas.fa-dog
+          | Noob proof
+      footer
+        | IE Project .
+        a(href="/terms")  Terms of Service
+        |  .
+        a(href="/privacy")  Privacy Policy
+        |  .
+        a(href="/guideline")  Community Guide
+
+
+  script(src="/javascripts/scroll.js")
+  script(src="/javascripts/particle-network.min.js")
+    comment https://github.com/JulianLaval/canvas-particle-network?tab=readme-ov-file
+  script(src="/javascripts/network.js")
+  script(src="/javascripts/util.js")
