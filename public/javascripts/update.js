@@ -177,7 +177,9 @@ disconnectButton.addEventListener('click', () => {
 const plusButton = document.querySelectorAll(".plus-sign")[0];
 plusButton.addEventListener('click', () => {
     const newVoiceChannel = prompt('Enter Voice Channel Name: ');
-    socket.emit('create-new-voice-channel', { channelName : newVoiceChannel } );
+    if (newVoiceChannel) {
+        socket.emit('create-new-voice-channel', {channelName: newVoiceChannel});
+    }
 });
 
 
