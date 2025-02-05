@@ -82,3 +82,4 @@ This project uses a client-server architecture where the frontend communicates w
 ![About Us](https://drive.google.com/uc?export=view&id=1l4RN2HFV6kTwUWS4ZQh_Fv7tKCcmLeiv)
 ![FAQ](https://drive.google.com/uc?export=view&id=19b2zZ763EimJ3_eXZU9WW9AoSptESbWw)
 ![Main](https://drive.google.com/uc?export=view&id=1s48EqluPWiv5BIgfr9FqzbzvC3iLQSeC)
+![404](https://drive.google.com/uc?export=view&id=1opCuqLb_ZF8TK0gt-6pOMz7pccfuzR9p)
