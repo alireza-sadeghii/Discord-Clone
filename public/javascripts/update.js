@@ -174,12 +174,16 @@ disconnectButton.addEventListener('click', () => {
 });
 
 
-const plusButton = document.querySelectorAll(".plus-sign")[0];
+const plusButton = document.getElementById('add-server');
 plusButton.addEventListener('click', () => {
-    const newVoiceChannel = prompt('Enter Voice Channel Name: ');
-    if (newVoiceChannel) {
-        socket.emit('create-new-voice-channel', {channelName: newVoiceChannel});
-    }
+    showCustomPrompt('Enter Voice Channel Name : ', (newVoiceChannel) => {
+        if (newVoiceChannel) {
+            const voice_channels = Array.from(document.querySelectorAll('.voice-channel')).map(element => element.innerHTML);
+            if (!voice_channels.includes(newVoiceChannel)) {
+                socket.emit('create-new-voice-channel', {channelName: newVoiceChannel});
+            }
+        }
+    });
 });
 
 
@@ -196,4 +200,27 @@ function madeNewChannel(channelName) {
     const channelList = document.getElementById("channels-list");
     channelList.appendChild(newChannelElement);
     voiceChannelListener();
+}
+
+function showCustomPrompt(message, callback) {
+    const customPrompt = document.getElementById('custom-prompt');
+    const promptInput = document.getElementById('prompt-input');
+    const promptOk = document.getElementById('prompt-ok');
+    const promptCancel = document.getElementById('prompt-cancel');
+    document.getElementById('prompt-message').textContent = message;
+
+
+    customPrompt.style.display = 'flex';
+
+    promptOk.onclick = () => {
+        const value = promptInput.value;
+        customPrompt.style.display = 'none';
+        promptInput.value = '';
+        callback(value);
+    };
+
+    promptCancel.onclick = () => {
+        customPrompt.style.display = 'none';
+        callback(null);
+    };
 }
