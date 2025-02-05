@@ -7,7 +7,8 @@ block content
     div#application
         section#servers-column.column-display
             div.server-icon
-                img(src="/images/server.jpg")
+                a(href="/")
+                    img(src="/images/server.jpg")
             div.server-icon#add-server
                 span.plus-sign
 
@@ -49,6 +50,14 @@ block content
                 span Members
             div#members-list.scroll
                 span.member-name User#1463
+
+    #custom-prompt.custom-prompt
+        .custom-prompt-content
+            p#prompt-message Enter Voice Channel Name:
+            input#prompt-input(type="text" maxlength=7)
+            .custom-prompt-buttons
+                button#prompt-ok OK
+                button#prompt-cancel Cancel
 
     script(src="/javascripts/socket.io.min.js")
     script(src="/javascripts/chat.js")
