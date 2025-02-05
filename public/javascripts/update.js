@@ -44,20 +44,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     await updateChatChannels();
 });
 
+function voiceChannelListener() {
+    const voices = document.querySelectorAll('.channel-name.voice-channel');
+    voices.forEach(voice => {
+        voice.addEventListener('click', () => {
+            all.forEach(ch => ch.classList.remove('selected'));
+            voice.classList.add('selected');
+            document.getElementById('selected-channel-name').innerText = voice.id;
 
-const voices = document.querySelectorAll('.channel-name.voice-channel');
-voices.forEach(voice => {
-    voice.addEventListener('click', () => {
-        all.forEach(ch => ch.classList.remove('selected'));
-        voice.classList.add('selected');
-        document.getElementById('selected-channel-name').innerText = voice.id;
-
-        const channelName = voice.id;
-        socket.emit("disconnect-from-voice-channel");
-        leaveVoiceChannel();
-        socket.emit('join-voice-channel', { channel: channelName });
+            const channelName = voice.id;
+            socket.emit("disconnect-from-voice-channel");
+            leaveVoiceChannel();
+            socket.emit('join-voice-channel', {channel: channelName});
+        });
     });
-});
+}
+voiceChannelListener();
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -75,7 +77,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function updateVoice(channel, users) {
-    const voiceChannelElement = document.getElementById(channel);
+    let voiceChannelElement = document.getElementById(channel);
+    if (!voiceChannelElement) {
+        madeNewChannel(channel);
+        voiceChannelElement = document.getElementById(channel);
+    }
     if (voiceChannelElement) {
         let userList = voiceChannelElement.querySelector('.voice-members-list');
         if (!userList) {
@@ -103,33 +109,6 @@ function updateVoice(channel, users) {
             userList.appendChild(userElement);
         });
     }
-}
-
-function detectTalking(stream) {
-    const audioContext = new AudioContext();
-    const source = audioContext.createMediaStreamSource(stream);
-    const analyser = audioContext.createAnalyser();
-    source.connect(analyser);
-
-    analyser.fftSize = 512;
-    const dataArray = new Uint8Array(analyser.frequencyBinCount);
-
-    function updateTalkingIndicator() {
-        analyser.getByteFrequencyData(dataArray);
-        const volume = dataArray.reduce((a, b) => a + b) / dataArray.length;
-
-        const isTalking = volume > 25;
-        socket.emit('user-talking', {username : name, isTalking: isTalking });
-
-        requestAnimationFrame(updateTalkingIndicator);
-    }
-
-    updateTalkingIndicator();
-}
-
-
-function handleUserStream(stream) {
-    detectTalking(stream);
 }
 
 
@@ -165,8 +144,54 @@ function deafCheck() {
     }
 }
 
+function detectTalking(stream) {
+    const audioContext = new AudioContext();
+    const source = audioContext.createMediaStreamSource(stream);
+    const analyser = audioContext.createAnalyser();
+    source.connect(analyser);
+
+    analyser.fftSize = 512;
+    const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+    function updateTalkingIndicator() {
+        analyser.getByteFrequencyData(dataArray);
+        const volume = dataArray.reduce((a, b) => a + b) / dataArray.length;
+
+        const isTalking = volume > 25;
+
+        socket.emit('user-talking', {username : name, isTalking: isTalking });
+
+        requestAnimationFrame(updateTalkingIndicator);
+    }
+
+    updateTalkingIndicator();
+}
+
 const disconnectButton = document.getElementById('disconnect');
 disconnectButton.addEventListener('click', () => {
     socket.emit("disconnect-from-voice-channel");
     leaveVoiceChannel();
 });
+
+
+const plusButton = document.querySelectorAll(".plus-sign")[0];
+plusButton.addEventListener('click', () => {
+    const newVoiceChannel = prompt('Enter Voice Channel Name: ');
+    socket.emit('create-new-voice-channel', { channelName : newVoiceChannel } );
+});
+
+
+socket.on('add-new-voice-channel', ({ channelName }) => {
+    madeNewChannel(channelName);
+});
+
+function madeNewChannel(channelName) {
+    const newChannelElement = document.createElement('span');
+    newChannelElement.classList.add('channel-name');
+    newChannelElement.classList.add('voice-channel');
+    newChannelElement.id = channelName;
+    newChannelElement.innerText = channelName;
+    const channelList = document.getElementById("channels-list");
+    channelList.appendChild(newChannelElement);
+    voiceChannelListener();
+}

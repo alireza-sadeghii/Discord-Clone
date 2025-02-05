@@ -66,7 +66,7 @@ function createPeerConnection(userId) {
         remoteAudio.srcObject = event.streams[0];
         remoteAudio.muted = isDeaf;
 
-        handleUserStream(event.streams[0]);
+        detectTalking(localStream);
     };
 }
 
@@ -111,8 +111,7 @@ socket.on('ice-candidate', (data) => {
     const peerConnection = peerConnections[targetUserId];
 
     if (candidate) {
-        peerConnection.addIceCandidate(new RTCIceCandidate(candidate)).then(() => console.log(`Added ICE candidate for ${targetUserId}`))
-            .catch(error => console.error(`Error adding ICE candidate for ${targetUserId}:`, error));
+        peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
     }
 });
 
