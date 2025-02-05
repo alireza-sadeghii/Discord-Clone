@@ -1,6 +1,5 @@
 # Discord Project
 #### Alireza Sadeghi | 9927913 | Final Project
-https://github.com/alireza-sadeghii/discord-clone
 
 ## Overview
 The Discord Clone Voice Channels is a platform that allows users to join voice channels without requiring login or user management. Users can listen to ongoing conversations in these channels or participate in them by speaking. The main focus of this platform is on real-time audio communication with a low-latency, smooth experience.
