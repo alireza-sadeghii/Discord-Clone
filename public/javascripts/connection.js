@@ -8,11 +8,11 @@ let mediaConstraints = { audio: true, video: false };
 socket.on('made-voice-connection', (data) => {
     getUserMedia().then(() => {
         const { channel, users } = data;
-        console.log(peerConnections);
         users.forEach((userId) => {
             if (userId !== socket.id) {
                 createPeerConnection(userId);
                 startCall(userId);
+                playJoinEffect();
             }
         });
     }).catch(error => {
@@ -72,6 +72,7 @@ function createPeerConnection(userId) {
 
 async function startCall(userId) {
     const peerConnection = peerConnections[userId];
+    console.log(peerConnection);
 
     const offer = await peerConnection.createOffer();
     await peerConnection.setLocalDescription(offer);
@@ -110,7 +111,8 @@ socket.on('ice-candidate', (data) => {
     const peerConnection = peerConnections[targetUserId];
 
     if (candidate) {
-        peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+        peerConnection.addIceCandidate(new RTCIceCandidate(candidate)).then(() => console.log(`Added ICE candidate for ${targetUserId}`))
+            .catch(error => console.error(`Error adding ICE candidate for ${targetUserId}:`, error));
     }
 });
 
@@ -119,9 +121,11 @@ function leaveVoiceChannel() {
     Object.keys(peerConnections).forEach(userId => {
         const peerConnection = peerConnections[userId];
         peerConnection.close();
+        delete peerConnections[userId];
     });
-    peerConnections = {};
+
     document.querySelectorAll('audio').forEach(audio => audio.remove());
+
     if (localStream) {
         localStream.getTracks().forEach(track => track.stop());
     }
@@ -164,3 +168,35 @@ function undeafUser() {
     isDeaf = false;
 }
 
+
+socket.on('update-talking-status', ({ username, isTalking }) => {
+    const userProfile = document.getElementById(username);
+
+    if (userProfile) {
+        if (isTalking) {
+            userProfile.classList.add('voice-coordinator');
+        } else {
+            userProfile.classList.remove('voice-coordinator');
+        }
+    }
+});
+
+socket.on('user-left', (userId) => {
+    if (peerConnections[userId]) {
+        peerConnections[userId].close();
+        delete peerConnections[userId];
+        const remoteAudio = document.getElementById(`audio-${userId}`);
+        if (remoteAudio) {
+            remoteAudio.remove();
+        }
+        console.log(`User ${userId} left, removed peer connection.`);
+    }
+});
+
+
+function playJoinEffect() {
+    const audio = new Audio('./resources/join.mp3');
+    audio.play().catch(error => {
+        console.error('Error playing MP3:', error);
+    });
+}

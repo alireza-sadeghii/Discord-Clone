@@ -53,6 +53,7 @@ voices.forEach(voice => {
         document.getElementById('selected-channel-name').innerText = voice.id;
 
         const channelName = voice.id;
+        socket.emit("disconnect-from-voice-channel");
         leaveVoiceChannel();
         socket.emit('join-voice-channel', { channel: channelName });
     });
@@ -113,17 +114,12 @@ function detectTalking(stream) {
     analyser.fftSize = 512;
     const dataArray = new Uint8Array(analyser.frequencyBinCount);
 
-    const userProfile = document.getElementById(name);
-
     function updateTalkingIndicator() {
         analyser.getByteFrequencyData(dataArray);
         const volume = dataArray.reduce((a, b) => a + b) / dataArray.length;
 
-        if (volume > 15) {
-            userProfile.classList.add('voice-coordinator');
-        } else {
-            userProfile.classList.remove('voice-coordinator');
-        }
+        const isTalking = volume > 25;
+        socket.emit('user-talking', {username : name, isTalking: isTalking });
 
         requestAnimationFrame(updateTalkingIndicator);
     }

@@ -41,6 +41,7 @@ const handleSocketConnection = (socket, io) => {
 
     socket.on('join-voice-channel', (data) => {
         const {channel} = data;
+        socket.voice_channel = channel;
 
         removeFromChannels(randomUsername, io);
 
@@ -87,7 +88,17 @@ const handleSocketConnection = (socket, io) => {
         }
     });
 
+    socket.on('user-talking', ({ username, isTalking }) => {
+        const channel = socket.voice_channel;
+        if (channel) {
+            voiceChannels[channel].forEach(user => {
+                io.to(getSocketIdByUsername(user)).emit('update-talking-status', { username, isTalking });
+            });
+        }
+    });
+
     socket.on('disconnect-from-voice-channel', () => {
+        io.emit('user-left', socket.id);
         removeFromChannels(randomUsername, io);
     });
 
