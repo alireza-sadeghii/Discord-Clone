@@ -6,9 +6,11 @@
 
 var app = require('../app');
 var debug = require('debug')('discord:server');
-var http = require('http');
+// var http = require('http');
+var https = require('https');
 var socketIo = require('socket.io');
 const {handleSocketConnection} = require("../controllers/socketController");
+const fs = require("fs");
 
 /**
  * Get port from environment and store in Express.
@@ -20,8 +22,11 @@ app.set('port', port);
 /**
  * Create HTTP server.
  */
-
-var server = http.createServer(app);
+const options = {
+  key: fs.readFileSync('./key.pem'),
+  cert: fs.readFileSync('./cert.pem'),
+};
+var server = https.createServer(options, app);
 var io = socketIo(server);
 app.io = io;
 
