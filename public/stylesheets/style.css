@@ -737,6 +737,7 @@ footer a {
   display: flex;
   flex-direction: row;
   justify-items: center;
+  justify-content: space-between;
   align-items: center;
   gap: .5rem;
 }
@@ -744,6 +745,19 @@ footer a {
 .voice-members img {
   width: 30px;
   height: 30px;
+}
+
+.voice-members button {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.voice-members button i {
+  font-size: 1.3rem;
+  color: white;
 }
 
 .scroll::-webkit-scrollbar {

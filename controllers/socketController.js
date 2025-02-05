@@ -106,6 +106,10 @@ const handleSocketConnection = (socket, io) => {
         }
     });
 
+    socket.on('silent-user', ({ username }) => {
+        socket.emit('make-user-silent', { userId: getSocketIdByUsername(username) });
+    });
+
     socket.on('disconnect-from-voice-channel', () => {
         io.emit('user-left', socket.id);
         removeFromChannels(randomUsername, io);

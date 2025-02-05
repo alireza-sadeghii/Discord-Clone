@@ -103,8 +103,22 @@ function updateVoice(channel, users) {
             userProfile.setAttribute('src', '../images/profile.png');
             userProfile.id = user;
 
+            const muteButton = document.createElement('button');
+            muteButton.innerHTML = '<i class="fas fa-microphone"></i>';
+            muteButton.addEventListener('contextmenu', () => {
+                event.preventDefault();
+                socket.emit('silent-user', { username: user });
+                if (!muteButton.innerHTML.includes('slash')) {
+                    muteButton.innerHTML = '<i class="fas fa-microphone-slash"></i>';
+                } else {
+                    muteButton.innerHTML = '<i class="fas fa-microphone"></i>';
+                }
+            });
+
+
             userElement.appendChild(userProfile);
             userElement.appendChild(memberName);
+            userElement.appendChild(muteButton);
 
             userList.appendChild(userElement);
         });

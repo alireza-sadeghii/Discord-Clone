@@ -199,3 +199,11 @@ function playJoinEffect() {
         console.error('Error playing MP3:', error);
     });
 }
+
+socket.on('make-user-silent', ({ userId }) => {
+    document.querySelectorAll('audio').forEach(audio => {
+        if (audio.id === `audio-${userId}`) {
+            audio.muted = !audio.muted;
+        }
+    });
+});
