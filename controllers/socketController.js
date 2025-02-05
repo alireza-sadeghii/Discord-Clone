@@ -40,6 +40,9 @@ const handleSocketConnection = (socket, io) => {
     });
 
     socket.on('create-new-voice-channel', ({ channelName }) => {
+        if (voiceChannels[channelName]) {
+            return;
+        }
         voiceChannels[channelName] = [];
         io.emit('add-new-voice-channel', { channelName });
         socket.emit('initial-voice-channels', voiceChannels);
